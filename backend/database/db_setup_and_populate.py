@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from backend.database.db_setup import Base, Project, User, ProjectUser, File
+from backend.database.db_setup import Base, Project, User, ProjectUser, File, DB_STRING
 
 # Utility Methods
 
@@ -18,7 +18,6 @@ def add_project_user(project_name, user_name):
 
 # Main Script
 
-DB_STRING = 'postgresql://postgres:abc@localhost:5432'
 
 db_engine = create_engine(DB_STRING)
 
@@ -69,6 +68,8 @@ add_project_user("Paint Everything", "Emily")
 add_project_user("Candy Warehouse", "Patrick")
 session.commit()
 
+# Print data for easy verification
+
 result = session.query(Project)
 for project in result:
     print(project.id, project.name, project.start_date)
@@ -91,3 +92,6 @@ result = session.query(ProjectUser)
 for pu in result:
     print(pu.project_id, pu.user_id)
 
+# Close session
+
+session.close()
