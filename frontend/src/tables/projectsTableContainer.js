@@ -1,12 +1,28 @@
 import React from 'react';
 import Table from './table';
+import { textFilter } from 'react-bootstrap-table2-filter';
 
 class ProjectsTableContainer extends React.Component {
-    data = [3];
 
+        columns = [{
+            dataField: 'id',
+            text: 'Project ID',
+            filter: textFilter(),
+            sort: true
+        }, {
+            dataField: 'name',
+            text: 'Project Name',
+            filter: textFilter(),
+            sort: true
+        }, {
+            dataField: 'start_date',
+            text: 'Start Date',
+            filter: textFilter(),
+            sort: true
+        }];
+    
     render() {
-        const state = this.state;
-        return <Table data={data} />>
+        return <Table area="Project" columns={this.columns} />
     }
 }
 
