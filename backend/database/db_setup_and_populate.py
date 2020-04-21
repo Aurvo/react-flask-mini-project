@@ -39,10 +39,10 @@ session.add(Project(name="2020 Voter Correction", start_date=datetime.datetime(2
 session.commit()
 
 session.add(User(name="Brian Newman", email="brian_n@comcast.net"))
-session.add(User(name="Emily Bradley", email="emma_s_bradley@xyphol.com"))
 session.add(User(name="Macy Shillings", email="macy@gmail.com"))
 session.add(User(name="Patrick Tesler", email="patrickt@comcast.net"))
-session.add(User(name="Quin Border", email="q_f_border@gmail.com"))
+session.add(User(name="Emily Bradley", email="emma_s_bradley@xyphol.com"))
+session.add(User(name="Quin Border", email="a_q_border@gmail.com"))
 session.commit()
 
 add_file("colors", "Java", "Paint Everything")
@@ -84,7 +84,7 @@ print("")
 
 result = session.query(File)
 for file in result:
-    print(user.id, file.name, file.type, file.project_id)
+    print(file.id, file.name, file.type, file.project_id)
 
 print("")
 

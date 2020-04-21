@@ -1,18 +1,12 @@
-from flask import Flask, jsonify
-from backend.database.database_api import *
+from flask import Flask, jsonify, request
+from backend.database.database_api import get_data
 
 app = Flask(__name__)
 
 
-@app.route('/json/projects')
+@app.route('/api')
 def projects():
-    return get_json_response_from_query(get_projects())
-
-
-# Utility Methods
-
-def get_json_response_from_query(query_obj):
-    return jsonify([row.serialize for row in query_obj])
+    return jsonify(get_data(request.args))
 
 # run server
 

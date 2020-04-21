@@ -1,9 +1,11 @@
 import React from 'react';
+import ProjectsTableContainer from '../../tables/projectsTableContainer';
 
 class Home extends React.Component {
+    
     render() {
         return (
-            <div>Projects Table</div>
+            <ProjectsTableContainer/>
         );
     }
 }
