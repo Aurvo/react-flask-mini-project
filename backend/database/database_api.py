@@ -25,7 +25,7 @@ def get_session():
 
 def get_data(args):
     # determine table to query from args
-    table_class = nameToClassDict[args.get('table')];
+    table_class = nameToClassDict[args.get('area')];
     if not table_class:
         raise NameError("table does not exist")
 
@@ -34,7 +34,7 @@ def get_data(args):
         query = session.query(table_class)
 
         # update query with filters if applicable
-        query = handle_filter(query, table_class, args.getlist('fields'), args.getlist('values'))
+        query = handle_filter(query, table_class, args.getlist('fields[]'), args.getlist('values[]'))
 
         # sort rows if applicable
         sorted_col = args.get('order_by')
@@ -67,13 +67,12 @@ def handle_filter(query, table_class, filter_fields, filter_values):
 
 
 def add_filter(query, table_class, field, value):
-    try:
-        value_as_int = int(value)
-    except ValueError:
-        x = getattr(table_class, field)
-        new_query = query.filter(getattr(table_class, field).like(f"%{value}%"))
+    sql_alchemy_field = getattr(table_class, field)
+    sql_field_type = str(sql_alchemy_field.property.columns[0].type)
+    if 'INT' in sql_field_type:
+        new_query = query.filter(getattr(table_class, field) == int(value))
     else:
-        new_query = query.filter(getattr(table_class, field) == value_as_int)
+        new_query = query.filter(getattr(table_class, field).like(f"%{value}%"))
 
     return new_query
 

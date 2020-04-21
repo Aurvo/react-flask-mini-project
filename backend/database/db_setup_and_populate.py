@@ -31,11 +31,11 @@ session = Session()
 
 # add data
 
-session.add(Project(name="Paint Everything", start_date=datetime.datetime(2018, 6, 14)))
-session.add(Project(name="Sarah's Book Reviews", start_date=datetime.datetime(2019, 8, 10)))
-session.add(Project(name="Candy Warehouse", start_date=datetime.datetime(2019, 5, 21)))
-session.add(Project(name="Mighty Mighty Meatballs", start_date=datetime.datetime(2019, 11, 30)))
-session.add(Project(name="2020 Voter Correction", start_date=datetime.datetime(2020, 2, 13)))
+session.add(Project(name="Paint Everything", start_date=datetime.date(2018, 6, 14)))
+session.add(Project(name="Sarah's Book Reviews", start_date=datetime.date(2019, 8, 10)))
+session.add(Project(name="Candy Warehouse", start_date=datetime.date(2019, 5, 21)))
+session.add(Project(name="Mighty Mighty Meatballs", start_date=datetime.date(2019, 11, 30)))
+session.add(Project(name="2020 Voter Correction", start_date=datetime.date(2020, 2, 13)))
 session.commit()
 
 session.add(User(name="Brian Newman", email="brian_n@comcast.net"))

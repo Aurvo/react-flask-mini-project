@@ -9,14 +9,14 @@ class Project(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-    start_date = Column(DateTime, nullable=False)
+    start_date = Column(String(200), nullable=False)
 
     @property
     def serialize(self):
         return {
             'id': self.id,
             'name': self.name,
-            'start_date': str(self.start_date)
+            'start_date': self.start_date
         }
 
 

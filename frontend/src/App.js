@@ -12,10 +12,13 @@ function App() {
     <div className="container" style={{marginTop: 20 + 'px'}}>
       <Router>
         <Switch>
+          <Route path="/details/:id">
+            <Details />
+          </Route>
           <Route path="/details">
             <Details />
           </Route>
-          <Route path="/">
+          <Route exact path="/">
             <Home />
           </Route>
         </Switch>

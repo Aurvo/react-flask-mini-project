@@ -2,7 +2,7 @@ import React from 'react';
 import BootstrapTable from 'react-bootstrap-table-next';
 import paginationFactory from 'react-bootstrap-table2-paginator';
 import filterFactory, { textFilter, Comparator } from 'react-bootstrap-table2-filter';
-import getData from '../axios/apiAdapter';
+import getDataForReal from '../axios/apiAdapter';
 
 
 class Table extends React.Component {
@@ -15,15 +15,55 @@ class Table extends React.Component {
         this.sizePerPage = 5;
     }
 
+    
+    // requests data from the backend, but makes sure certain fields are
+    // allways filtered based on the allwaysFilter prop
+    getData(params, callback) {
+        params.fields = params.fields || [];
+        params.values = params.values || [];
+        const allwaysFilter = this.props.allwaysFilter;
+        if (this.props.allwaysFilter) {
+            for (let field in allwaysFilter) {
+                params.fields.push(field);
+                params.values.push(allwaysFilter[field]);
+            }
+        }
+        getDataForReal(params, callback);
+    }
+    
+    // requests data from backend upon mounting
     componentDidMount() {
-        getData({
-            table: this.props.area
-        }, (response) => {
+        this.getData({
+            area: this.props.area
+        }, response => {
             this.setState({data: response.data});
         });
     }
 
     onTableChange = (type, newState) => {
+        console.log(type);
+        console.log(newState);
+        
+        // capture filters
+        const filterFields = [];
+        const filterValues = [];
+        const filters = newState.filters;
+        for (let field in newState.filters) {
+            filterFields.push(field);
+            filterValues.push(filters[field].filterVal);
+        }
+
+        this.getData({
+            area: this.props.area,
+            order_by: newState.sortedField,
+            desc: newState.sortOrder === 'desc',
+            fields: filterFields,
+            values: filterValues,
+            page: newState.page,
+            rows_per_page: newState.sizePerPage
+        }, response => {
+            this.setState({data: response.data});
+        });
     }
     
     render() {
