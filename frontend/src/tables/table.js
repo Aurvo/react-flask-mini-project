@@ -6,13 +6,11 @@ import getDataForReal from '../axios/apiAdapter';
 
 
 class Table extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            data: [],
-            page: 1
-        }
-        this.sizePerPage = 5;
+    state = {
+        data: [],
+        page: 1,
+        sizePerPage: 0,
+        totalSize: 0
     }
 
     
@@ -28,19 +26,26 @@ class Table extends React.Component {
         getDataForReal(params, callback);
     }
     
+    updateStateFromResponse = (response) => {
+        const pageInfo = response.data.pageInfo
+        this.setState({
+            data: response.data.data,
+            page: pageInfo.page,
+            sizePerPage: pageInfo.sizePerPage,
+            totalSize: pageInfo.totalSize
+        });
+    }
+    
     // requests data from backend upon mounting
     componentDidMount() {
         this.getData({
-            area: this.props.area
-        }, response => {
-            this.setState({data: response.data});
-        });
+            area: this.props.area,
+            page: 1,
+            rows_per_page: this.sizePerPage
+        }, this.updateStateFromResponse);
     }
 
-    onTableChange = (type, newState) => {
-        console.log(type);
-        console.log(newState);
-        
+    onTableChange = (type, newState) => {        
         // capture filters
         const filterFields = [];
         const filterValues = [];
@@ -57,10 +62,8 @@ class Table extends React.Component {
             fields: filterFields,
             values: filterValues,
             page: newState.page,
-            rows_per_page: newState.sizePerPage
-        }, response => {
-            this.setState({data: response.data});
-        });
+            rows_per_page: this.sizePerPage
+        }, this.updateStateFromResponse);
     }
     
     render() {
@@ -80,8 +83,8 @@ class Table extends React.Component {
                 filter={ filterFactory() }
                 pagination={paginationFactory({
                     page: state.page,
-                    sizePerPage: this.sizePerPage,
-                    totalSize: state.data.length
+                    sizePerPage: state.sizePerPage,
+                    totalSize: state.totalSize
                 })}
                 onTableChange={this.onTableChange}
             />

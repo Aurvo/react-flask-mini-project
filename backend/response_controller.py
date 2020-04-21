@@ -9,7 +9,8 @@ CORS(app)
 
 @app.route('/api')
 def projects():
-    return jsonify(get_data(request.args))
+    data_list_slice, page_info_dict = get_data(request.args)
+    return jsonify({'data': data_list_slice, 'pageInfo': page_info_dict})
 
 # run server
 

@@ -13,6 +13,8 @@ nameToClassDict = {
     'File': File
 }
 
+ROWS_PER_PAGE = 5
+
 
 @contextmanager
 def get_session():
@@ -71,10 +73,10 @@ def get_data(args):
                 row['project_id'] = project_id;
 
         # pagination - get the appropriate portion of the list
-        rows = handle_pagination(rows, args.get('page'), args.get('rows_per_page'))
+        rows, page_info_dict = handle_pagination(rows, args.get('page'))
 
         # return
-        return rows
+        return rows, page_info_dict
 
 
 def handle_filter(query, table_class, filter_fields, filter_values):
@@ -102,15 +104,19 @@ def add_filter(query, table_class, field, value):
     return new_query
 
 
-def handle_pagination(rows, page_num, rows_per_page):
+def handle_pagination(rows, page_num):
+    original_length = len(rows)
     # convert args to ints, handle Nones, handle defaults
     try:
         page_num = 1 if not page_num else int(page_num)
-        rows_per_page = 5 if not rows_per_page else int(rows_per_page)
     except ValueError:
         # invalid parameters - don't do pagination
         return rows
 
-    start_index = (page_num - 1) * rows_per_page
-    end_index = min(start_index + rows_per_page, len(rows))
-    return rows[start_index:end_index]
+    start_index = (page_num - 1) * ROWS_PER_PAGE
+    end_index = min(start_index + ROWS_PER_PAGE, len(rows))
+    return rows[start_index:end_index], {
+        'page': page_num if page_num <= original_length // ROWS_PER_PAGE + 1 else 1,
+        'sizePerPage': ROWS_PER_PAGE,
+        'totalSize': original_length
+    }
