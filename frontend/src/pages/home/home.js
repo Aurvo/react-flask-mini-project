@@ -4,9 +4,11 @@ import ProjectsTableContainer from '../../tables/projectsTableContainer';
 class Home extends React.Component {
     
     render() {
-        return (
+        return (<div>
+            <h1>Projects</h1>
+            <br></br>
             <ProjectsTableContainer/>
-        );
+        </div>);
     }
 }
 

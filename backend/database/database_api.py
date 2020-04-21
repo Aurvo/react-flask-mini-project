@@ -24,14 +24,35 @@ def get_session():
 
 
 def get_data(args):
+    # Accepted URL Parameters:
+    # area: the class model of the table to query (as a string, or course)
+    # order_by: the field to order by (asc by default)
+    # desc: if both order_by and desc are present, orders date in descending order
+    # fields[]: fields to filter--length must equal the length of values[]
+    # values[]: values to filter (each must correspond with a field--i.e same position)
+    # page: the page number (site is paginated)
+    # rows_per_page: data items per page
+    # project_id: the corresponding project id for each data item (if applicable)
+
     # determine table to query from args
     table_class = nameToClassDict[args.get('area')];
     if not table_class:
-        raise NameError("table does not exist")
+        return []
 
     with get_session() as session:
         # begin forming query
         query = session.query(table_class)
+
+        # handle project_id constraint
+        project_id = args.get('project_id')
+        if project_id and project_id.isdigit():
+            project_id = int(project_id)
+            if table_class == File:
+                query = query.filter(table_class.project_id == project_id)
+            elif table_class == User:
+                # sql alchemy uses the defined relationships in db_setup to know what to join on
+                query = query.join(ProjectUser).filter(ProjectUser.project_id == project_id)
+            # does nothing if queried table is not File or User
 
         # update query with filters if applicable
         query = handle_filter(query, table_class, args.getlist('fields[]'), args.getlist('values[]'))
@@ -44,6 +65,10 @@ def get_data(args):
 
         # convert query to list
         rows = [row.serialize for row in query]
+        # manually add in project_id for user rows because that table doesn't have that field
+        if table_class == User and project_id:
+            for row in rows:
+                row['project_id'] = project_id;
 
         # pagination - get the appropriate portion of the list
         rows = handle_pagination(rows, args.get('page'), args.get('rows_per_page'))

@@ -1,5 +1,6 @@
 import React from 'react';
 import Table from './table';
+import {Link} from 'react-router-dom';
 import { textFilter } from 'react-bootstrap-table2-filter';
 
 class ProjectsTableContainer extends React.Component {
@@ -19,10 +20,19 @@ class ProjectsTableContainer extends React.Component {
             text: 'Start Date',
             filter: textFilter(),
             sort: true
+        }, {
+            dataField: 'dummy',
+            isDummyField: true,
+            text: 'Details',
+            formatter: (cellCount, row) => {
+                return (
+                    <Link to={`/details/${row.id}/${row.name}`}>Details</Link>
+                );
+            }
         }];
     
     render() {
-        return <Table area="Project" columns={this.columns} />
+        return (<Table area="Project" columns={this.columns} />)
     }
 }
 

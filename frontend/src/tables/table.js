@@ -19,13 +19,10 @@ class Table extends React.Component {
     // requests data from the backend, but makes sure certain fields are
     // allways filtered based on the allwaysFilter prop
     getData(params, callback) {
-        params.fields = params.fields || [];
-        params.values = params.values || [];
         const allwaysFilter = this.props.allwaysFilter;
         if (this.props.allwaysFilter) {
             for (let field in allwaysFilter) {
-                params.fields.push(field);
-                params.values.push(allwaysFilter[field]);
+                params[field] = allwaysFilter[field];
             }
         }
         getDataForReal(params, callback);

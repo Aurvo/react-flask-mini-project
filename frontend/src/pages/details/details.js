@@ -1,11 +1,11 @@
 import React from 'react';
-import {Link} from "react-router-dom";
+import {Link, useParams } from 'react-router-dom';
+import UsersTableContainer from '../../tables/usersTableContainer';
+import FilesTableContainer from '../../tables/filesTableContainer';
 
 class Details extends React.Component {
     state = {
         activeTab: 'Users',
-        userData: "User Data",
-        fileData: "File Data"
     }
 
     updateActiveTab(newTab) {
@@ -17,9 +17,9 @@ class Details extends React.Component {
         let paneContent;
 
         if (state.activeTab === 'Users') {
-            paneContent = state.userData
+            paneContent = <UsersTableContainer />
         } else if (state.activeTab === 'Files') {
-            paneContent = state.fileData
+            paneContent = <FilesTableContainer />
         }
         
         return (
@@ -27,6 +27,8 @@ class Details extends React.Component {
                 <Link to="/">
                     <h4><i className="fas fa-angle-double-left"></i> Back</h4>
                 </Link>
+                <br></br>
+                <DetailsHeader />
                 <br></br>
                 {/* Tabs */}
                 <ul className="nav nav-tabs">
@@ -47,6 +49,14 @@ class Details extends React.Component {
             </div>
         );
     }
+}
+
+//need to make a separate functional component for thei becasue it uses a react hook
+function DetailsHeader() {
+    const urlParams = useParams();
+    const appendedToHeader = urlParams && urlParams.project_name ?
+         ` for ${urlParams.project_name}` : '';
+    return <h1>Details{appendedToHeader}</h1>
 }
 
 export default Details;

@@ -1,4 +1,5 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
+from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -40,7 +41,9 @@ class ProjectUser(Base):
     __tablename__ = 'project_user'
 
     project_id = Column(Integer, ForeignKey('project.id'), primary_key=True, autoincrement=False)
-    user_id = Column(Integer, ForeignKey('project.id'), primary_key=True, autoincrement=False)
+    user_id = Column(Integer, ForeignKey('user.id'), primary_key=True, autoincrement=False)
+    project = relationship(Project)
+    user = relationship(User)
 
     @property
     def serialize(self):

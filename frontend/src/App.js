@@ -2,7 +2,7 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
 } from "react-router-dom";
 import Home from './pages/home/home';
 import Details from './pages/details/details';
@@ -12,7 +12,7 @@ function App() {
     <div className="container" style={{marginTop: 20 + 'px'}}>
       <Router>
         <Switch>
-          <Route path="/details/:id">
+          <Route path="/details/:project_id/:project_name">
             <Details />
           </Route>
           <Route path="/details">
