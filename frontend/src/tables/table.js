@@ -57,8 +57,8 @@ class Table extends React.Component {
 
         this.getData({
             area: this.props.area,
-            order_by: newState.sortedField,
-            desc: newState.sortOrder === 'desc',
+            order_by: newState.sortField,
+            desc: newState.sortOrder === 'desc'? true : undefined,
             fields: filterFields,
             values: filterValues,
             page: newState.page,
